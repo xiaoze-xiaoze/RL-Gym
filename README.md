@@ -4,6 +4,9 @@ A minimal but growing collection of Reinforcement Learning algorithms in **Gym**
 
 ## Algorithms
 - DQN  
-- REINFORCE  
+- REINFORCE
+- A2C
+- PPO
+- SAC
 
-Coming soon: SAC, DDPG, PPO, TD3, A3C ……
+Coming soon: DDPG, TD3, A3C ……
