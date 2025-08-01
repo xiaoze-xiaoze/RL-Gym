@@ -1,5 +1,5 @@
 import gymnasium as gym
-from Agent import DQNAgent
+from Agent import PPOAgent
 import os
 
 class Config:
@@ -7,12 +7,10 @@ class Config:
     learning_rate = 0.001
     gamma = 0.99
     
-    # 经验回放参数
-    buffer_size = 20000
-    batch_size = 32
-    
-    # 目标网络同步频率
-    target_sync = 100
+    # PPO参数
+    clip = 0.2
+    epoch = 4
+    batch_size = 64
     
     # 训练参数
     train_episodes = 300
@@ -37,14 +35,14 @@ def create_agent():
     action_dim = env.action_space.n  # 2
     
     # 创建Agent
-    agent = DQNAgent(
+    agent = PPOAgent(
         state_dim=state_dim,
         action_dim=action_dim,
         learning_rate=config.learning_rate,
         gamma=config.gamma,
-        buffer_size=config.buffer_size,
-        batch_size=config.batch_size,
-        target_sync=config.target_sync
+        clip=config.clip,
+        epoch=config.epoch,
+        batch_size=config.batch_size
     )
     
     return agent, env, config

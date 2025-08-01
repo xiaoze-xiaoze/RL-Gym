@@ -1,21 +1,14 @@
 import gymnasium as gym
-from Agent import DQNAgent
+from Agent import A2CAgent
 import os
 
 class Config:
     # 网络参数
-    learning_rate = 0.001
+    learning_rate = 0.0007
     gamma = 0.99
     
-    # 经验回放参数
-    buffer_size = 20000
-    batch_size = 32
-    
-    # 目标网络同步频率
-    target_sync = 100
-    
     # 训练参数
-    train_episodes = 300
+    train_episodes = 1500
     
     # 测试参数
     test_episodes = 10
@@ -37,14 +30,11 @@ def create_agent():
     action_dim = env.action_space.n  # 2
     
     # 创建Agent
-    agent = DQNAgent(
+    agent = A2CAgent(
         state_dim=state_dim,
         action_dim=action_dim,
         learning_rate=config.learning_rate,
-        gamma=config.gamma,
-        buffer_size=config.buffer_size,
-        batch_size=config.batch_size,
-        target_sync=config.target_sync
+        gamma=config.gamma
     )
     
     return agent, env, config

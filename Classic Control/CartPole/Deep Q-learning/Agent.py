@@ -178,7 +178,7 @@ class DQNAgent:
         print('训练完成\n')
         
         # 绘制训练曲线
-        self._plot_training_curves(score, losses)
+        self.plot(score, losses)
         
         return score, eval_score, losses
 
