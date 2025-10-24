@@ -8,5 +8,4 @@ A minimal but growing collection of Reinforcement Learning algorithms in **Gym**
 - A2C
 - PPO
 - SAC
-
-Coming soon: DDPG, TD3, A3C ……
+- ……
