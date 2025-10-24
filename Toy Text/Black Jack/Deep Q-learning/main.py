@@ -55,7 +55,6 @@ def train():
     train_scores, eval_scores, losses = agent.train(env, config)
     
     env.close()
-    print("训练完成")
     
     return train_scores, eval_scores, losses
 
@@ -72,7 +71,6 @@ def test():
     test_scores, avg_score = agent.test(test_env, episodes=config.test_episodes)
     
     test_env.close()
-    print("测试完成")
 
     return test_scores, avg_score
 

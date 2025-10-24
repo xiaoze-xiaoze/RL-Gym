@@ -49,25 +49,11 @@ class Critic(nn.Module):
         self.fc2 = nn.Linear(64, 64)
         self.fc3 = nn.Linear(64, 1)
         
-        # Q2网络
-        self.fc4 = nn.Linear(state_dim + action_dim, 64)
-        self.fc5 = nn.Linear(64, 64)
-        self.fc6 = nn.Linear(64, 1)
-        
     def forward(self, state, action):
-        sa = torch.cat([state, action], 1)
-        
-        # Q1
-        q1 = F.relu(self.fc1(sa))
-        q1 = F.relu(self.fc2(q1))
-        q1 = self.fc3(q1)
-        
-        # Q2
-        q2 = F.relu(self.fc4(sa))
-        q2 = F.relu(self.fc5(q2))
-        q2 = self.fc6(q2)
-        
-        return q1, q2
+        x = torch.cat([state, action], 1)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        return self.fc3(x)
 
 # 经验回放
 Transition = namedtuple('Transition', ('state', 'action', 'reward', 'next_state', 'done'))
@@ -100,8 +86,10 @@ class SACAgent:
         
         # 网络
         self.actor = Actor(state_dim, action_dim, max_action).to(device)
-        self.critic = Critic(state_dim, action_dim).to(device)
-        self.target_critic = Critic(state_dim, action_dim).to(device)
+        self.critic1 = Critic(state_dim, action_dim).to(device)
+        self.critic2 = Critic(state_dim, action_dim).to(device)
+        self.target_critic1 = Critic(state_dim, action_dim).to(device)
+        self.target_critic2 = Critic(state_dim, action_dim).to(device)
         
         # 同步目标网络
         self.target_critic.load_state_dict(self.critic.state_dict())
@@ -149,11 +137,13 @@ class SACAgent:
         # 更新Critic
         with torch.no_grad():
             next_actions, next_log_probs = self.actor.sample(next_states)
-            target_q1, target_q2 = self.target_critic(next_states, next_actions)
+            target_q1 = self.target_critic1(next_states, next_actions)
+            target_q2 = self.target_critic2(next_states, next_actions) 
             target_q = torch.min(target_q1, target_q2) - self.alpha * next_log_probs
             target_q = rewards + (1 - dones.float()) * self.gamma * target_q
 
-        current_q1, current_q2 = self.critic(states, actions)
+        current_q1 = self.critic1(states, actions) 
+        current_q2 = self.critic2(states, actions)
         critic_loss = F.mse_loss(current_q1, target_q) + F.mse_loss(current_q2, target_q)
 
         self.critic_optimizer.zero_grad()
