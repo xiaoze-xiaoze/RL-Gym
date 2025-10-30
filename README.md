@@ -1,3 +1,3 @@
-### RL-Gym
+# RL-Gym
 
 In this project, I will implement several Gymnasium-based reinforcement-learning algorithms, including but not limited to DQN, REINFORCE, A2C, PPO, and SAC……
